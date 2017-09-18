@@ -1,13 +1,35 @@
-from flask import Flask, request, jsonify
+from flask import (
+    Flask, request, jsonify, render_template, abort, Response, make_response
+)
+from flask_accept import accept
+from flask_restful import Resource, Api
 import requests
 
 app = Flask(__name__)
+api = Api(app)
 
-@app.route('/', methods=['POST'])
-def check_url_endpoint():
-    body = request.get_json()
-    bad_urls = check_urls(body['urls'])
-    return jsonify({'bad_urls': bad_urls})
+class UrlVerify(Resource):
+    def get(self):
+        response = make_response(render_template('test.html'))
+        response.headers['Content-Type'] = 'text/html'
+        return response
+
+    def post(self):
+        body = request.get_json()
+        bad_urls = check_urls(body['urls'])
+        return jsonify({'bad_urls': bad_urls})
+
+api.add_resource(UrlVerify, '/')
+
+# def test():
+#     return render_template('test.html')
+
+# @app.route('/', methods=['POST'])
+# @accept('application/w-xxx-form-urlencoded')
+# def check_url_endpoint():
+    # body = request.form
+    # bad_urls = check_urls(body['urls'])
+    # return jsonify({'bad_urls': bad_urls})
 
 def check_urls(urls):
     return filter(lambda x: x is not None, [check_url(url) for url in urls])

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>URL Validation Form:</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        function submitForm() {
+          console.log('first')
+          var inputs = $('form').serializeArray();
+          var urls = [inputs[0].value]
+          // inputs.map(function(field) { field.value });
+          console.log(inputs);
+          console.log(urls);
+          $.ajax({
+              url: '/',
+              data: JSON.stringify({
+                'urls': urls
+              }),
+              type: 'POST',
+              dataType: 'json',
+              contentType: 'application/json; charset=utf-8',
+              success: function(response) {
+                  console.log(response);
+              },
+              error: function(error) {
+                  console.log(error);
+              }
+          });
+        }
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <form class="form-url" action="/" method="post">
+        <h2 class="form-signin-heading">Please Enter a URL:</h2>
+        <input type="url" name="url" class="form-control" placeholder="URL" required autofocus id="url_type">
+      </form>
+      <input value="Submit" type="submit" onclick="submitForm()">
+     </div>
+  </body>
+</html>
